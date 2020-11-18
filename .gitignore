@@ -1,0 +1,8 @@
+BusinessLayer/bin/
+BusinessLayer/obj/
+DataAccessLayer/bin/
+DataAccessLayer/obj/
+Host/bin/
+Host/obj/
+packages/
+.vs/
