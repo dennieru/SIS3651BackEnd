@@ -1,0 +1,331 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="PetControlModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Pet">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="name" Type="nchar" MaxLength="100" Nullable="false" />
+          <Property Name="birthDate" Type="datetime" />
+          <Property Name="breed" Type="nchar" MaxLength="100" />
+          <Property Name="description" Type="nchar" MaxLength="500" />
+          <Property Name="specie" Type="nchar" MaxLength="100" />
+          <Property Name="userId" Type="uniqueidentifier" />
+          <Property Name="createdDate" Type="datetime" />
+          <Property Name="createdBy" Type="nchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Record">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="recordNumber" Type="nchar" MaxLength="100" Nullable="false" />
+          <Property Name="createdDate" Type="datetime" />
+          <Property Name="createdBy" Type="nchar" MaxLength="100" />
+          <Property Name="isVaccine" Type="bit" />
+          <Property Name="notes" Type="nchar" MaxLength="500" />
+          <Property Name="petId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="vaccineId" Type="uniqueidentifier" />
+          <Property Name="status" Type="nchar" MaxLength="100" />
+          <Property Name="tags" Type="nchar" MaxLength="500" />
+          <Property Name="type" Type="nchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="firstName" Type="nchar" MaxLength="100" Nullable="false" />
+          <Property Name="lastName" Type="nchar" MaxLength="100" Nullable="false" />
+          <Property Name="description" Type="nchar" MaxLength="500" />
+          <Property Name="email" Type="nchar" MaxLength="100" />
+          <Property Name="id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="address" Type="nchar" MaxLength="500" />
+          <Property Name="nickName" Type="nchar" MaxLength="100" />
+          <Property Name="createdDate" Type="datetime" />
+          <Property Name="createdBy" Type="nchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Vaccine">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="name" Type="nchar" MaxLength="100" Nullable="false" />
+          <Property Name="description" Type="nchar" MaxLength="500" />
+          <Property Name="id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="living" Type="bit" />
+          <Property Name="preparation" Type="nchar" MaxLength="500" />
+          <Property Name="type" Type="nchar" MaxLength="100" />
+          <Property Name="cost" Type="int" />
+          <Property Name="disease" Type="nchar" MaxLength="100" />
+        </EntityType>
+        <Association Name="FK_Pet_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Pet" Type="Self.Pet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Pet">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Record_Pet">
+          <End Role="Pet" Type="Self.Pet" Multiplicity="1" />
+          <End Role="Record" Type="Self.Record" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Pet">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Record">
+              <PropertyRef Name="petId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Record_Vaccine">
+          <End Role="Vaccine" Type="Self.Vaccine" Multiplicity="0..1" />
+          <End Role="Record" Type="Self.Record" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vaccine">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Record">
+              <PropertyRef Name="vaccineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PetControlModelStoreContainer">
+          <EntitySet Name="Pet" EntityType="Self.Pet" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Record" EntityType="Self.Record" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Vaccine" EntityType="Self.Vaccine" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Pet_User" Association="Self.FK_Pet_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Pet" EntitySet="Pet" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Record_Pet" Association="Self.FK_Record_Pet">
+            <End Role="Pet" EntitySet="Pet" />
+            <End Role="Record" EntitySet="Record" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Record_Vaccine" Association="Self.FK_Record_Vaccine">
+            <End Role="Vaccine" EntitySet="Vaccine" />
+            <End Role="Record" EntitySet="Record" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PetControlModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Pet">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Guid" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="birthDate" Type="DateTime" Precision="3" />
+          <Property Name="breed" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="description" Type="String" MaxLength="500" FixedLength="true" Unicode="true" />
+          <Property Name="specie" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="userId" Type="Guid" />
+          <Property Name="createdDate" Type="DateTime" Precision="3" />
+          <Property Name="createdBy" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Pet_User" FromRole="Pet" ToRole="User" />
+          <NavigationProperty Name="Records" Relationship="Self.FK_Record_Pet" FromRole="Pet" ToRole="Record" />
+        </EntityType>
+        <EntityType Name="Record">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Guid" Nullable="false" />
+          <Property Name="recordNumber" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="createdDate" Type="DateTime" Precision="3" />
+          <Property Name="createdBy" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="isVaccine" Type="Boolean" />
+          <Property Name="notes" Type="String" MaxLength="500" FixedLength="true" Unicode="true" />
+          <Property Name="petId" Type="Guid" Nullable="false" />
+          <Property Name="vaccineId" Type="Guid" />
+          <Property Name="status" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="tags" Type="String" MaxLength="500" FixedLength="true" Unicode="true" />
+          <Property Name="type" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Pet" Relationship="Self.FK_Record_Pet" FromRole="Record" ToRole="Pet" />
+          <NavigationProperty Name="Vaccine" Relationship="Self.FK_Record_Vaccine" FromRole="Record" ToRole="Vaccine" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="firstName" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="lastName" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="500" FixedLength="true" Unicode="true" />
+          <Property Name="email" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="id" Type="Guid" Nullable="false" />
+          <Property Name="address" Type="String" MaxLength="500" FixedLength="true" Unicode="true" />
+          <Property Name="nickName" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="createdDate" Type="DateTime" Precision="3" />
+          <Property Name="createdBy" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Pets" Relationship="Self.FK_Pet_User" FromRole="User" ToRole="Pet" />
+        </EntityType>
+        <EntityType Name="Vaccine">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="500" FixedLength="true" Unicode="true" />
+          <Property Name="id" Type="Guid" Nullable="false" />
+          <Property Name="living" Type="Boolean" />
+          <Property Name="preparation" Type="String" MaxLength="500" FixedLength="true" Unicode="true" />
+          <Property Name="type" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="cost" Type="Int32" />
+          <Property Name="disease" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Records" Relationship="Self.FK_Record_Vaccine" FromRole="Vaccine" ToRole="Record" />
+        </EntityType>
+        <Association Name="FK_Pet_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Pet" Type="Self.Pet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Pet">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Record_Pet">
+          <End Role="Pet" Type="Self.Pet" Multiplicity="1" />
+          <End Role="Record" Type="Self.Record" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Pet">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Record">
+              <PropertyRef Name="petId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Record_Vaccine">
+          <End Role="Vaccine" Type="Self.Vaccine" Multiplicity="0..1" />
+          <End Role="Record" Type="Self.Record" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vaccine">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Record">
+              <PropertyRef Name="vaccineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PetControlEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Pets" EntityType="Self.Pet" />
+          <EntitySet Name="Records" EntityType="Self.Record" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="Vaccines" EntityType="Self.Vaccine" />
+          <AssociationSet Name="FK_Pet_User" Association="Self.FK_Pet_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Pet" EntitySet="Pets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Record_Pet" Association="Self.FK_Record_Pet">
+            <End Role="Pet" EntitySet="Pets" />
+            <End Role="Record" EntitySet="Records" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Record_Vaccine" Association="Self.FK_Record_Vaccine">
+            <End Role="Vaccine" EntitySet="Vaccines" />
+            <End Role="Record" EntitySet="Records" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="PetControlModelStoreContainer" CdmEntityContainer="PetControlEntities">
+          <EntitySetMapping Name="Pets">
+            <EntityTypeMapping TypeName="PetControlModel.Pet">
+              <MappingFragment StoreEntitySet="Pet">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="birthDate" ColumnName="birthDate" />
+                <ScalarProperty Name="breed" ColumnName="breed" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="specie" ColumnName="specie" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="createdDate" ColumnName="createdDate" />
+                <ScalarProperty Name="createdBy" ColumnName="createdBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Records">
+            <EntityTypeMapping TypeName="PetControlModel.Record">
+              <MappingFragment StoreEntitySet="Record">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="recordNumber" ColumnName="recordNumber" />
+                <ScalarProperty Name="createdDate" ColumnName="createdDate" />
+                <ScalarProperty Name="createdBy" ColumnName="createdBy" />
+                <ScalarProperty Name="isVaccine" ColumnName="isVaccine" />
+                <ScalarProperty Name="notes" ColumnName="notes" />
+                <ScalarProperty Name="petId" ColumnName="petId" />
+                <ScalarProperty Name="vaccineId" ColumnName="vaccineId" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="tags" ColumnName="tags" />
+                <ScalarProperty Name="type" ColumnName="type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="PetControlModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="address" ColumnName="address" />
+                <ScalarProperty Name="nickName" ColumnName="nickName" />
+                <ScalarProperty Name="createdDate" ColumnName="createdDate" />
+                <ScalarProperty Name="createdBy" ColumnName="createdBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Vaccines">
+            <EntityTypeMapping TypeName="PetControlModel.Vaccine">
+              <MappingFragment StoreEntitySet="Vaccine">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="living" ColumnName="living" />
+                <ScalarProperty Name="preparation" ColumnName="preparation" />
+                <ScalarProperty Name="type" ColumnName="type" />
+                <ScalarProperty Name="cost" ColumnName="cost" />
+                <ScalarProperty Name="disease" ColumnName="disease" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

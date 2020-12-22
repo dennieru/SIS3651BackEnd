@@ -6,7 +6,16 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer
 {
-    class IDAL
+    public interface IDAL<T>
     {
+        List<T> GetList();
+
+        T Get(string id);
+
+        bool Update(ref T t);
+
+        bool Delete(string id);
+
+        bool Post(T t);
     }
 }

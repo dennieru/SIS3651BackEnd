@@ -4,15 +4,15 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public class PetDAL : IDAL<Pet>
+    public class UserDAL : IDAL<User>
     {
         private PetControlEntities context;
 
-        public PetDAL()
+        public UserDAL()
         {
         }
 
-        public PetDAL(PetControlEntities context)
+        public UserDAL(PetControlEntities context)
         {
             this.context = context;
         }
@@ -23,9 +23,9 @@
             {
                 using (this.context = new PetControlEntities())
                 {
-                    Pet pet = new Pet { id = new Guid(id) };
-                    this.context.Pets.Attach(pet);
-                    this.context.Pets.Remove(pet);
+                    var user = new User { id = new Guid(id) };
+                    this.context.Users.Attach(user);
+                    this.context.Users.Remove(user);
                     this.context.SaveChanges();
                 }
 
@@ -39,17 +39,17 @@
             }
         }
 
-        public Pet Get(string id)
+        public User Get(string id)
         {
             try
             {
-                Pet pet;
+                User user;
                 using (this.context = new PetControlEntities())
                 {
-                    pet = this.context.Pets.SingleOrDefault(u => u.id == new Guid(id));
+                    user = this.context.Users.SingleOrDefault(u => u.id == new Guid(id));
                 }
 
-                return pet;
+                return user;
             }
             catch (Exception ex)
             {
@@ -58,22 +58,22 @@
             }
         }
 
-        public List<Pet> GetList()
+        public List<User> GetList()
         {
             using (this.context = new PetControlEntities())
             {
-                return this.context.Pets.ToList();
+                return this.context.Users.ToList();
             }
         }
 
-        public bool Post(Pet pet)
+        public bool Post(User user)
         {
             try
             {
-                pet.id = Guid.NewGuid();
+                user.id = Guid.NewGuid();
                 using (this.context = new PetControlEntities())
                 {
-                    this.context.Pets.Add(pet);
+                    this.context.Users.Add(user);
                     this.context.SaveChanges();
                 }
 
@@ -86,21 +86,22 @@
             }
         }
 
-        public bool Update(ref Pet newPet)
+        public bool Update(ref User newUser)
         {
             try
             {
-                var id = newPet.id;
+                var id = newUser.id;
                 using (this.context = new PetControlEntities())
                 {
-                    var oldPet = this.context.Pets.SingleOrDefault(b => b.id == id);
-                    if (oldPet != null)
+                    var oldUser = this.context.Users.SingleOrDefault(b => b.id == id);
+                    if (oldUser != null)
                     {
-                        oldPet.name = newPet.name;
-                        oldPet.specie = newPet.specie;
-                        oldPet.birthDate = newPet.birthDate;
-                        oldPet.breed = newPet.breed;
-                        oldPet.description = newPet.description;
+                        oldUser.address = newUser.address;
+                        oldUser.description = newUser.description;
+                        oldUser.email = newUser.email;
+                        oldUser.firstName = newUser.firstName;
+                        oldUser.lastName = newUser.lastName;
+                        oldUser.nickName = newUser.nickName;
                         this.context.SaveChanges();
                     }
                 }
