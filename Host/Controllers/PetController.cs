@@ -1,10 +1,9 @@
 ﻿namespace Host.Controllers
 {
-    using BusinessLayer.BusinessObjects;
     using BusinessLayer.Managers;
+    using Common.Views;
     using Newtonsoft.Json;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Web.Http;
@@ -14,15 +13,19 @@
         [HttpGet]
         public HttpResponseMessage Get([FromUri] int id)
         {
-            var pet = new Pet { Id = id, Name = "John Doe", BirthDate = System.DateTime.Now };
+            var pet = new PetView { Id = id.ToString(), Name = "John Doe", BirthDate = System.DateTime.Now };
             return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(JsonConvert.SerializeObject(pet), System.Text.Encoding.UTF8, "application/json") };
         }
 
         [HttpGet]
-        public HttpResponseMessage Get([FromUri] string name)
+        public HttpResponseMessage Get([FromUri] string nickName)
         {
-            Client client = ClientManager.GetClient(name);
-            var pets = PetManager.GetPets(client.Id);
+            List<PetView> pets = new List<PetView>();
+            UserView user = UserManager.GetUser(nickName);
+            if (user != null)
+            {
+                pets = PetManager.GetPets(user.Id);
+            }
 
             return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(JsonConvert.SerializeObject(pets), System.Text.Encoding.UTF8, "application/json") };
         }
@@ -33,6 +36,21 @@
             var pets = PetManager.GetPets();
 
             return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(JsonConvert.SerializeObject(pets), System.Text.Encoding.UTF8, "application/json") };
+        }
+
+        [HttpPost]
+        public IHttpActionResult Post([FromBody] PetView pet, HttpRequestMessage request)
+        {
+            try
+            {
+                PetManager.SavePet(pet);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return Ok();
         }
     }
 }

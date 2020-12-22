@@ -4,15 +4,15 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public class PetDAL : IDAL<Pet>
+    public class VaccineDAL : IDAL<Vaccine>
     {
         private PetControlEntities context;
 
-        public PetDAL()
+        public VaccineDAL()
         {
         }
 
-        public PetDAL(PetControlEntities context)
+        public VaccineDAL(PetControlEntities context)
         {
             this.context = context;
         }
@@ -23,9 +23,9 @@
             {
                 using (this.context = new PetControlEntities())
                 {
-                    Pet pet = new Pet { id = new Guid(id) };
-                    this.context.Pets.Attach(pet);
-                    this.context.Pets.Remove(pet);
+                    var vaccine = new Vaccine { id = new Guid(id) };
+                    this.context.Vaccines.Attach(vaccine);
+                    this.context.Vaccines.Remove(vaccine);
                     this.context.SaveChanges();
                 }
 
@@ -39,17 +39,17 @@
             }
         }
 
-        public Pet Get(string id)
+        public Vaccine Get(string id)
         {
             try
             {
-                Pet pet;
+                Vaccine vaccine;
                 using (this.context = new PetControlEntities())
                 {
-                    pet = this.context.Pets.SingleOrDefault(u => u.id == new Guid(id));
+                    vaccine = this.context.Vaccines.SingleOrDefault(u => u.id == new Guid(id));
                 }
 
-                return pet;
+                return vaccine;
             }
             catch (Exception ex)
             {
@@ -58,22 +58,22 @@
             }
         }
 
-        public List<Pet> GetList()
+        public List<Vaccine> GetList()
         {
             using (this.context = new PetControlEntities())
             {
-                return this.context.Pets.ToList();
+                return this.context.Vaccines.ToList();
             }
         }
 
-        public bool Post(Pet pet)
+        public bool Post(Vaccine vaccine)
         {
             try
             {
-                pet.id = Guid.NewGuid();
+                vaccine.id = Guid.NewGuid();
                 using (this.context = new PetControlEntities())
                 {
-                    this.context.Pets.Add(pet);
+                    this.context.Vaccines.Add(vaccine);
                     this.context.SaveChanges();
                 }
 
@@ -86,21 +86,23 @@
             }
         }
 
-        public bool Update(ref Pet newPet)
+        public bool Update(ref Vaccine newVaccine)
         {
             try
             {
-                var id = newPet.id;
+                var id = newVaccine.id;
                 using (this.context = new PetControlEntities())
                 {
-                    var oldPet = this.context.Pets.SingleOrDefault(b => b.id == id);
-                    if (oldPet != null)
+                    var oldVaccine = this.context.Vaccines.SingleOrDefault(b => b.id == id);
+                    if (oldVaccine != null)
                     {
-                        oldPet.name = newPet.name;
-                        oldPet.specie = newPet.specie;
-                        oldPet.birthDate = newPet.birthDate;
-                        oldPet.breed = newPet.breed;
-                        oldPet.description = newPet.description;
+                        oldVaccine.cost = newVaccine.cost;
+                        oldVaccine.description = newVaccine.description;
+                        oldVaccine.disease = newVaccine.disease;
+                        oldVaccine.living = newVaccine.living;
+                        oldVaccine.name = newVaccine.name;
+                        oldVaccine.preparation = newVaccine.preparation;
+                        oldVaccine.type = newVaccine.type;
                         this.context.SaveChanges();
                     }
                 }
