@@ -3,6 +3,7 @@
     using BusinessLayer.Managers;
     using Common.Views;
     using Newtonsoft.Json;
+    using System;
     using System.Collections.Generic;
     using System.Net;
     using System.Net.Http;
@@ -24,7 +25,7 @@
             UserView user = UserManager.GetUser(nickName);
             if (user != null)
             {
-                pets = PetManager.GetPets(user.Id);
+                pets = PetManager.GetPets(new Guid(user.Id));
             }
 
             return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(JsonConvert.SerializeObject(pets), System.Text.Encoding.UTF8, "application/json") };

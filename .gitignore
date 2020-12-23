@@ -6,3 +6,5 @@ Host/bin/
 Host/obj/
 packages/
 .vs/
+Common/bin/
+Common/obj/

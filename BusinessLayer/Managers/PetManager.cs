@@ -5,6 +5,7 @@
     using DataAccessLayer;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text.RegularExpressions;
 
     public static class PetManager
@@ -21,19 +22,20 @@
                 specie = petToSave.SpecieName,
                 createdDate = DateTime.Now,
                 createdBy = Constant.ADMIN_EMAIL,
+                userId = new Guid(petToSave.UserId),
             };
             petHandler.Post(pet);
         }
 
-        public static List<PetView> GetPets(string  userId= "")
+        public static List<PetView> GetPets()
         {
             PetDAL petHandler = new PetDAL();
             List<PetView> petList = new List<PetView>();
-            var pets = petHandler.GetList();
+            List<Pet> pets = petHandler.GetList();
 
             foreach (var pet in pets)
             {
-                int age = DateTime.Today.Year - (pet.birthDate != null? pet.birthDate.Value.Year: DateTime.Today.Year);
+                int age = DateTime.Today.Year - (pet.birthDate != null ? pet.birthDate.Value.Year : DateTime.Today.Year);
                 petList.Add(new PetView
                 {
                     Name = pet.name.Trim(),
@@ -43,7 +45,33 @@
                     Breed = pet.breed.Trim(),
                     SpecieName = pet.specie.Trim(),
                     Specie = GetSpecie(pet.specie),
-                    ImageSrc = GetImgSrc(pet.specie),
+                    ImageSrc = string.Format("pets/{0}.jpg", pet.name.Trim()),
+                });
+            }
+
+            return petList;
+        }
+
+        public static List<PetView> GetPets(Guid userId)
+        {
+            PetDAL petHandler = new PetDAL();
+            List<PetView> petList = new List<PetView>();
+            List<Pet> pets = petHandler.GetList();
+            pets = pets.Where(p => p.userId == userId).ToList();
+
+            foreach (var pet in pets)
+            {
+                int age = DateTime.Today.Year - (pet.birthDate != null ? pet.birthDate.Value.Year : DateTime.Today.Year);
+                petList.Add(new PetView
+                {
+                    Name = pet.name.Trim(),
+                    BirthDate = pet.birthDate != null ? pet.birthDate.Value : DateTime.Today,
+                    Age = age,
+                    Description = pet.description.Trim(),
+                    Breed = pet.breed.Trim(),
+                    SpecieName = pet.specie.Trim(),
+                    Specie = GetSpecie(pet.specie),
+                    ImageSrc = string.Format("pets/{0}.jpg", pet.name.Trim()),
                 });
             }
 
@@ -68,30 +96,6 @@
                     break;
                 case "mouse":
                     returnSpecie = Species.Mouse;
-                    break;
-            }
-
-            return returnSpecie;
-        }
-
-        private static string GetImgSrc(string specie)
-        {
-            string returnSpecie = "pony-icon";
-            string pivot = Regex.Replace(specie, @"\s+", "").ToLower();
-
-            switch (pivot)
-            {
-                case "cat":
-                    returnSpecie = "cat-icon";
-                    break;
-                case "dog":
-                    returnSpecie = "dog-icon";
-                    break;
-                case "bird":
-                    returnSpecie = "parrot-icon";
-                    break;
-                case "mouse":
-                    returnSpecie = "mouse-icon";
                     break;
             }
 
