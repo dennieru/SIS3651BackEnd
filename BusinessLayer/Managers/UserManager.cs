@@ -52,7 +52,7 @@
         {
             UserDAL userHandler = new UserDAL();
             List<User> users = userHandler.GetList();
-            User user = users.FirstOrDefault();
+            User user = users.Where(u => u.nickName.Trim() == name.Trim()).FirstOrDefault();
             if (user != null)
             {
                 return new UserView
