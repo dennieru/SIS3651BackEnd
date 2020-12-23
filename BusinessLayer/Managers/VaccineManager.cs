@@ -9,21 +9,72 @@
 
     public static class VaccineManager
     {
-        public static void SaveUser(UserView userToSave)
+        public static void SaveRecord(RecordView recordToSave)
         {
-            UserDAL userHandler = new UserDAL();
-            User pet = new User
+            RecordDAL recordHandler = new RecordDAL();
+            Random _random = new Random();
+            VaccineView recordVaccine = recordToSave.Vaccines.FirstOrDefault();
+            if (recordVaccine != null)
             {
-                firstName = userToSave.FirstName,
-                lastName = userToSave.LastName,
-                address = userToSave.Address,
-                description = userToSave.Description,
-                email = userToSave.Email,
-                nickName = userToSave.NickName,
-                createdBy = Constant.ADMIN_EMAIL,
-                createdDate = DateTime.Now,
-            };
-            userHandler.Post(pet);
+                VaccineView vaccine = VaccineManager.GetVaccine(recordVaccine.Name);
+                if (vaccine != null)
+                {
+                    Record record = new Record
+                    {
+                        isVaccine = true,
+                        recordNumber = "RCRD" + _random.Next(20, 300),
+                        notes = "",
+                        petId = new Guid(recordToSave.PetId),
+                        status = "open",
+                        tags = GetAnualTags(recordToSave.Tags, recordToSave.Vaccines),
+                        type = "vaccine",
+                        vaccineId = new Guid(vaccine.Id),
+                        createdDate = DateTime.Now,
+                        createdBy = Constant.ADMIN_EMAIL,
+                    };
+                    recordHandler.Post(record);
+                }
+            }
+        }
+
+        private static VaccineView GetVaccine(string name)
+        {
+            VaccineDAL vaccineHandler = new VaccineDAL();
+            List<Vaccine> vaccines = vaccineHandler.GetList();
+            Vaccine vaccine = vaccines.Where(v => v.name == name).FirstOrDefault();
+            if (vaccine != null)
+            {
+                return new VaccineView
+                {
+                    Cost = vaccine.cost.ToString(),
+                    Id = vaccine.id.ToString(),
+                    Description = vaccine.description.Trim(),
+                    Name = vaccine.name.Trim(),
+                    Type = vaccine.type.Trim(),
+                    Disease = vaccine.disease.Trim(),
+                    Living = vaccine.living.ToString(),
+                    Preparation = vaccine.preparation.Trim(),
+                };
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private static string GetAnualTags(List<string> tags, List<VaccineView> vaccines)
+        {
+            string tag = string.Join(",", tags);
+            foreach (var vaccine in vaccines)
+            {
+                if (vaccine.Type == "annual")
+                {
+                    tag += DateTime.Now.Year.ToString();
+                    break;
+                }
+            }
+
+            return tag;
         }
 
         public static List<RecordView> GetRecords(string name)

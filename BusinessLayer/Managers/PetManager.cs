@@ -27,6 +27,33 @@
             petHandler.Post(pet);
         }
 
+        public static PetView GetPet(Guid id)
+        {
+            PetDAL petHandler = new PetDAL();
+            List<PetView> petList = new List<PetView>();
+            List<Pet> pets = petHandler.GetList();
+            Pet pet = pets.Where(u => u.id.Equals(id)).FirstOrDefault();
+            int age = DateTime.Today.Year - (pet.birthDate != null ? pet.birthDate.Value.Year : DateTime.Today.Year);
+            if (pet != null)
+            {
+                return new PetView
+                {
+                    Name = pet.name.Trim(),
+                    BirthDate = pet.birthDate != null ? pet.birthDate.Value : DateTime.Today,
+                    Age = age,
+                    Description = pet.description.Trim(),
+                    Breed = pet.breed.Trim(),
+                    SpecieName = pet.specie.Trim(),
+                    Specie = GetSpecie(pet.specie),
+                    ImageSrc = string.Format("pets/{0}.jpg", pet.name.Trim()),
+                };
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public static List<PetView> GetPets()
         {
             PetDAL petHandler = new PetDAL();

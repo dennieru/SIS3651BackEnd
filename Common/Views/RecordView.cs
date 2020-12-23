@@ -5,6 +5,8 @@ namespace Common.Views
     public class RecordView
     {
         public string Id { get; set; }
+        
+        public string PetId { get; set; }
 
         public string Name { get; set; }
 
