@@ -71,5 +71,29 @@
                 return null;
             }
         }
+
+        public static UserView GetUser(Guid id)
+        {
+            UserDAL userHandler = new UserDAL();
+            List<User> users = userHandler.GetList();
+            User user = users.Where(u => u.id.Equals(id)).FirstOrDefault();
+            if (user != null)
+            {
+                return new UserView
+                {
+                    Address = user.address,
+                    Description = user.description,
+                    Email = user.email,
+                    FirstName = user.firstName,
+                    LastName = user.lastName,
+                    NickName = user.nickName,
+                    Id = user.id.ToString(),
+                };
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }
