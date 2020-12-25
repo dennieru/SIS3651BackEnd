@@ -41,11 +41,27 @@
         }
 
         [HttpPost]
-        public IHttpActionResult Post([FromBody] PetView pet, HttpRequestMessage request)
+        public IHttpActionResult Post([FromBody] RecordView record, HttpRequestMessage request)
         {
             try
             {
-                PetManager.SavePet(pet);
+                VaccineManager.SaveRecord(record);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return Ok();
+        }
+
+
+        [HttpPost]
+        public IHttpActionResult Put([FromBody] RecordView vaccine, HttpRequestMessage request)
+        {
+            try
+            {
+                VaccineManager.SaveRecord(vaccine);
             }
             catch (System.Exception ex)
             {
